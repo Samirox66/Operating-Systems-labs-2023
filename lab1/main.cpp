@@ -64,14 +64,16 @@ int main(int argc, char **argv)
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
 
-    signal(SIGHUP, Daemon::HandleSignal);
-    signal(SIGTERM, Daemon::HandleSignal);
+    auto& daemon = Daemon::getInstance();
 
-    Daemon::ProtectAgainstRestart();
+    signal(SIGHUP, HandleSignal);
+    signal(SIGTERM, HandleSignal);
+
+    daemon.ProtectAgainstRestart();
 
     while (true)
     {
-        Daemon::DeleteAllSubfolders();
+        daemon.DeleteAllSubfolders();
         sleep(cfg.GetInterval());
     }
 }

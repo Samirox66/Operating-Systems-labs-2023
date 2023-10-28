@@ -3,15 +3,19 @@
 
 #include <string>
 
+void HandleSignal(int sigNum);
+
 class Daemon
 {
 public:
-    static void ProtectAgainstRestart();
-    static void HandleSignal(int sigNum);
-    static void DeleteAllSubfolders();
-
+    void ProtectAgainstRestart();
+    void DeleteAllSubfolders();
+    static Daemon& getInstance();
 private:
-    static const std::string ABS_PID_PATH;
+    Daemon(std::string path): ABS_PID_PATH(path) {}
+    Daemon(const Daemon&) = delete;
+    Daemon& operator=(const Daemon&) = delete;
+    const std::string ABS_PID_PATH;
 };
 
 #endif //DAEMON_H

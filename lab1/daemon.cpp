@@ -1,3 +1,4 @@
+
 #include <signal.h>
 #include <unistd.h>
 #include <syslog.h>
@@ -9,8 +10,6 @@
 #include "daemon.h"
 
 using namespace std;
-
-const string Daemon::ABS_PID_PATH = "/var/run/daemon.pid";
 
 void Daemon::ProtectAgainstRestart()
 {
@@ -26,7 +25,7 @@ void Daemon::ProtectAgainstRestart()
     pidOutputFile.close();
 }
 
-void Daemon::HandleSignal(int sigNum)
+void HandleSignal(int sigNum)
 {
     switch(sigNum)
     {
@@ -102,4 +101,9 @@ void Daemon::DeleteAllSubfolders()
     }
 
     closedir(dir);
+}
+
+Daemon& Daemon::getInstance() {
+    static Daemon instance("/var/run/daemon.pid");
+    return instance;
 }
