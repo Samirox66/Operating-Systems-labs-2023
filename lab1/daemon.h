@@ -16,6 +16,7 @@ private:
     Daemon(const Daemon&) = delete;
     Daemon& operator=(const Daemon&) = delete;
     const std::string ABS_PID_PATH;
+    static void DoSafeChdir(std::string path);
 };
 
 #endif //DAEMON_H

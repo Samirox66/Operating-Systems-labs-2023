@@ -81,7 +81,11 @@ void DeleteFolder(string absFldrPath)
 void Daemon::DeleteAllSubfolders()
 {
     Config &cfg = Config::GetInstance();
-    DIR *dir = opendir(cfg.GetAbsoluteFolderPath().c_str());
+
+    std::string originalDir = cfg.GetAbsoluteFolderPath();
+    DoSafeChdir("/");
+
+    DIR *dir = opendir(originalDir.c_str());
 
     if (dir == nullptr)
     {
@@ -96,14 +100,23 @@ void Daemon::DeleteAllSubfolders()
         {
             string subfldrName = entry->d_name;
             if (subfldrName != "." && subfldrName != "..")
-                DeleteFolder(cfg.GetAbsoluteFolderPath() + "/" + subfldrName);
+                DeleteFolder(originalDir + "/" + subfldrName);
         }
     }
 
     closedir(dir);
+
+    DoSafeChdir(originalDir);
 }
 
 Daemon& Daemon::getInstance() {
     static Daemon instance("/var/run/daemon.pid");
     return instance;
+}
+
+void Daemon::DoSafeChdir(std::string path) {
+    if (chdir(path.c_str()) == -1) {
+        syslog(LOG_ERR, "Error with chdir");
+        exit(EXIT_FAILURE);
+    }
 }
