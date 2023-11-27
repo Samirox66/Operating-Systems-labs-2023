@@ -31,7 +31,7 @@ Conn::~Conn()
 
 bool Conn::Open(size_t id, bool create)
 {
-    ConnFifoArgs *fifoArgs = (ConnFifoArgs *)pmem;
+    ConnFifoArgs *fifoArgs = static_cast<ConnFifoArgs*>(pmem);
     if (fifoArgs == NULL) {
         std::cout << "[ERROR]: FIFO connection's arguments invalid." << std::endl;
         return false;

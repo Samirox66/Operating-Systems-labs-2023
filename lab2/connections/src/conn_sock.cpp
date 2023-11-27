@@ -34,7 +34,7 @@ Conn::~Conn()
 
 bool Conn::Open(size_t id, bool create)
 {
-    ConnSockArgs *sockArgs = (ConnSockArgs *)pmem;
+    ConnSockArgs *sockArgs = static_cast<ConnSockArgs*>(pmem);
     if (sockArgs == NULL) {
         std::cout << "[ERROR]: Socket connection's arguments invalid." << std::endl;
         return false;
